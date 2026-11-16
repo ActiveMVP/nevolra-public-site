@@ -1,59 +1,46 @@
-# Nevolra public website — updateable version
+# Nevolra — Public Website
 
-This folder contains the same public Nevolra overview design, **plus a safe progress-update workflow**. It is a static website: no server, database, analytics, external code, or visitor sign-in required.
+**Live website:** https://activemvp.github.io/nevolra-public-site/
 
-## Who can publish?
+This is the public, share-safe Nevolra development overview. The website is static, without a visitor editing interface, analytics service, or external scripts. It contains no private Nevolra architecture or development source.
 
-Only the GitHub repository owner and explicitly authorized accounts with **write permission** can change the site source or deploy through this workflow. A visitor cannot edit the website. GitHub may also allow authorized organization administrators and installed apps with write permissions; review **Settings → Collaborators and teams** and any GitHub Apps. The site itself has **no visitor editing form**. Do not give write access to strangers. Require approval for changes to `main` if you enable branch rules. Publication is public to anyone who has the URL; noindex is *not* access protection.
+## How to publish an update (owner only)
 
-## Publish — once, using GitHub Pages
+1. Open [data/updates.json](data/updates.json) on GitHub and choose the pencil (Edit).
+2. Add a public-safe progress item with a unique lowercase `id`, a `YYYY-MM-DD` date, a `title`, a factual `body`, and one of these statuses: `Verified engineering`, `Research prototype`, `In development`, `Planned`.
+3. Select **Commit changes** to `main` after reviewing the exact wording. The website builds and publishes automatically from [the GitHub Actions workflow](.github/workflows/pages.yml).
+4. For changes to the main story, edit [index.html](index.html) instead.
 
-1. On GitHub, create a dedicated **public** repository (e.g., `nevolra-public-site`) under your own account. **Do not publish the private Nevolra source repositories.** Review this entire folder before uploading. A public repo exposes all published source files and commit history.
-2. Upload **everything in this folder**, including the hidden `.github/workflows/pages.yml`, to that repository's `main` branch. For easiest first upload, extract the ZIP on a PC and use GitHub Desktop or Git. The ZIP is not itself a Pages deployment.
-3. In **Settings → Pages → Build and deployment**, select **GitHub Actions** as the source. If prompted, enable Actions. The existing workflow builds the site and deploys after a push to `main`.
-4. Find the permanent link under **Settings → Pages** or the successful deployment. Future pushes update **the same URL**.
-5. Test from a phone and a separate browser session. Leave private files, authorization systems, live repositories, and personal information off the public site.
-
-### Publish a new progress milestone (no HTML editing)
-
-Open **`data/updates.json`** in the GitHub web editor. Add another entry inside `entries`, for example:
-
+Example (not an actual achievement; do not publish it as fact):
 ```json
 {
   "entries": [
     {
-      "id": "2026-11-20-tested-stream-chat",
+      "id": "2026-11-20-example",
       "date": "2026-11-20",
-      "title": "Streaming companion demo",
-      "body": "A controlled, opt-in demonstration tested respectful chat interaction. Replace this example with only results you actually verified.",
+      "title": "Example progress update",
+      "body": "Replace this with an independently supported update.",
       "status": "In development"
     }
   ]
 }
 ```
+Keep existing entries when adding new ones. **Never publish unreleased controls, exact private paths, access credentials, unpublished source code or personal chat history.** A public repository exposes its entire commit history, including deleted material.
 
-You can add multiple entries separated by commas. `id` must be unique and never change after publication. Supported `status` values are `Verified engineering`, `Research prototype`, `In development`, and `Planned`. **Delete the example until a matching achievement is real.** The initial `entries` list is intentionally empty because the original timeline is already embedded in `index.html`.
+## Visitor update behavior
 
-Commit the change to `main` (or have an authorized collaborator create a PR and approve it). GitHub Actions validates the data, builds the page, and deploys the new revision automatically. No need to download and re-upload the entire page.
+The website checks `version.json` approximately every 60 seconds when the browser tab is visible and again when focus returns. Following a successful deployment, it reloads automatically, attempts to restore the reader's original section and vertical offset, and shows a dismissible "Nevolra has been updated" notice. Scroll restoration is best-effort when content is removed or substantially rearranged. A CDN or network connection may delay updates; automatic reloads do not occur while offline.
 
-### Update other text
+## Permissions and public access
 
-Use GitHub's web editor on `index.html`. The design, benchmarks, links, and current content are in that HTML file. Changes to `index.html` also trigger the same deploy. Preserve the code at the bottom handling version checks and scroll restoration.
+Only `ActiveMVP` and accounts or GitHub Apps explicitly granted repository **write** access can publish. General visitors may read, share or propose changes by pull request but cannot publish them. Review [repository access settings](https://github.com/ActiveMVP/nevolra-public-site/settings/access) before granting collaborators. The website and its public repository are readable by anyone; `noindex` is not a security measure.
 
-### What happens for existing visitors?
+## Maintenance
 
-While the tab is visible, it checks a tiny `version.json` file every **60 seconds**, and again when the tab regains focus. When GitHub Pages serves a new build, it reloads the page, restores the reader's position relative to the same section or timeline card, and shows a dismissible **“Nevolra has been updated”** notice. The browser URL remains on the same site; a version query can appear temporarily for cache refresh. Scroll restoration is best-effort if the section someone was reading is deleted or completely rewritten. No unexpected reload occurs offline or if update checking fails. GitHub Pages/CDN and browser caching mean updates are usually prompt but not guaranteed to appear immediately after deploy.
+- Deployment workflow: `.github/workflows/pages.yml`
+- Source page: `index.html`
+- Progress updates: `data/updates.json`
+- Build and schema checks: `scripts/build_site.py`
+- Live status: [GitHub Actions](https://github.com/ActiveMVP/nevolra-public-site/actions)
 
-### Local preview
-
-- Double-click `index.html` in Chrome/Edge to see the embedded website and its original timeline. File-based preview does not load the separate JSON updates because browser security restrictions differ.
-- To preview added JSON entries on a PC, run `python -m http.server 8000` from this folder, then open `http://localhost:8000`.
-- To validate a deploy locally run `python scripts/build_site.py`, which writes a standalone `_site` output folder.
-
-### Security and editorial policy
-
-- Never paste private source code, credentials, internal paths, personal conversations, access control details, or unredacted test logs into this repository.
-- Each public claim should distinguish **implemented**, **test-passed**, **installed**, **Owner-accepted**, and **still research**.
-- The November 2026 Ollama inference numbers are not proof of Nevolra's full-system speed. RAC/Genesis are ongoing research with scientific qualification gaps; not claims of neural continual learning or general intelligence.
-- Ko-fi contributions are voluntary sponsorship, not equity securities or guaranteed returns. Confirm support URLs before publishing.
-- A public GitHub Pages website can be shared by anyone with the link. If truly restricted access becomes necessary, use a hosting provider with authentication rather than relying on noindex.
+The November 2026 raw Ollama benchmarks do not establish full Nevolra system performance. RAC/Genesis experiments remain research with scientific qualification gaps. Support contributions are voluntary, not equity or a guarantee of a financial return.
